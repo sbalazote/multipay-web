@@ -28,9 +28,9 @@ namespace Multipay.Migrations
             //    );
             //
             context.Users.AddOrUpdate(x => x.Id,
-        new User() { Id = 1, Email = "pepe@gmail.com", Name = "Pepe123", Password = "abc123", Active = true},
-        new User() { Id = 2, Email = "test@hotmail.com", Name = "TestABC", Password = "1234567890", Active = true },
-        new User() { Id = 3, Email = "prueba@gmail.com", Name = "Prueba", Password = "admin", Active = true }
+        new User() { Id = 1, Email = "pepe@gmail.com", Name = "Pepe123", Surname = "Pepe123", Password = "abc123", Active = true},
+        new User() { Id = 2, Email = "test@hotmail.com", Name = "TestABC", Surname = "Pepe123", Password = "abc123", Active = true},
+        new User() { Id = 3, Email = "prueba@gmail.com", Name = "Prueba", Surname = "Pepe123", Password = "abc123", Active = true}
         );
             context.SaveChanges(); 
         }
