@@ -1,12 +1,12 @@
-﻿using Multipay.DTO;
-using Multipay.Services;
-using Multipay.Models;
+﻿using Model.Entities;
+using Multipay.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Services;
 
 namespace Multipay.Controllers
 {
@@ -24,7 +24,7 @@ namespace Multipay.Controllers
             String userName = "";
             String password = loginRequest.UserPassword;
 
-            User user = this.UserService.GetByEmail(loginRequest.UserEmail);
+            User user = UserService.GetByEmail(loginRequest.UserEmail);
             if (user != null && password != null)
             {
 

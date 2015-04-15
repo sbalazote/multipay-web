@@ -1,26 +1,24 @@
-﻿using Multipay.DAOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using Model.DAOs;
+using Model.Entities;
 
-namespace Multipay.Services
+namespace Services
 {
     public class UserService : IUserService
     {
         private UserDAO userDAO = new UserDAO();
 
-        public void Save(Models.User User)
+        public void Save(User User)
         {
             userDAO.Save(User);
         }
 
-        public Models.User Get(int Id)
+        public User Get(int Id)
         {
             return userDAO.Get(Id);
         }
 
-        public Models.User GetByEmail(string Email)
+        public User GetByEmail(string Email)
         {
             return userDAO.GetByEmail(Email);
         }
@@ -35,7 +33,7 @@ namespace Multipay.Services
             userDAO.Delete(UserId);
         }
 
-        public List<Models.User> GetAll()
+        public List<User> GetAll()
         {
             return userDAO.GetAll();
         }

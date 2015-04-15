@@ -1,16 +1,14 @@
 ﻿using log4net;
+using Model.Entities;
 using Multipay.DTOs;
-using Multipay.Services;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Web.Http;
+using Services;
 
 namespace Multipay.Controllers
 {
@@ -25,7 +23,7 @@ namespace Multipay.Controllers
             Log.Debug("AuthorizationController.cs" + "   code: " + code + "email: " + email);
 
             // obtengo el usuario por el mail
-            Models.User User = UserService.GetByEmail(email);
+            User User = UserService.GetByEmail(email);
 
             string GrantType = "authorization_code";
             string ClientId = "3108634673635661";

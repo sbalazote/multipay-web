@@ -1,11 +1,9 @@
-namespace Multipay.Migrations
-{
-    using Multipay.Models;
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
+using System.Data.Entity.Migrations;
+using Model.DBInitializer;
+using Model.Entities;
 
+namespace Model.Migrations
+{
     internal sealed class Configuration : DbMigrationsConfiguration<MultipayContext>
     {
         public Configuration()

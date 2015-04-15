@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Data.Entity;
+using Model.Entities;
 
-namespace Multipay.Models
+namespace Model.DBInitializer
 {
     public class MultipayContext : DbContext
     {
@@ -17,6 +14,8 @@ namespace Multipay.Models
 
         public MultipayContext() : base("name=MultipayContext")
         {
+            this.Configuration.LazyLoadingEnabled = true;
+            Configuration.AutoDetectChangesEnabled = true;
         }
 
         public DbSet<User> Users { get; set; }

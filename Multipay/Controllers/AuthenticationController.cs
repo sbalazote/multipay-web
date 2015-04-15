@@ -1,14 +1,12 @@
 ﻿using log4net;
-using Multipay.Services;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Web.Http;
+using Model.Entities;
+using Services;
 
 namespace Multipay.Controllers
 {
@@ -20,7 +18,7 @@ namespace Multipay.Controllers
         public string GetAuthenticationToken(string email)
         {
             //TODO checkear en la db si el tiempo expiro para el token, si es asi pedir uno nuevo. select x el email del seller.
-            Models.User User = UserService.GetByEmail(email);
+            User User = UserService.GetByEmail(email);
             DateTime ActualDT = new DateTime();
             DateTime TokenRequestedDT = User.TokenRequested;
             
