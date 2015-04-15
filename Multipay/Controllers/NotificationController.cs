@@ -16,16 +16,15 @@ namespace Multipay.Controllers
         public void GetAuthenticationToken(string topic, int id) 
         {
             Log.Debug(topic);
-            if (user != null)
+            if (topic != null)
             {
             //return the created user
-            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.Created, user);
+            throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.Created));
             }
             else
             {
             throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.InternalServerError));        
             }
-            Log.Debug(topic);
         }
     }
 }
