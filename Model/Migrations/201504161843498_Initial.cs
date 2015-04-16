@@ -1,7 +1,8 @@
-using System.Data.Entity.Migrations;
-
 namespace Model.Migrations
 {
+    using System;
+    using System.Data.Entity.Migrations;
+    
     public partial class Initial : DbMigration
     {
         public override void Up()
@@ -11,19 +12,20 @@ namespace Model.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Email = c.String(nullable: false),
-                        Name = c.String(nullable: false),
+                        Email = c.String(),
+                        Name = c.String(),
                         Surname = c.String(),
-                        Password = c.String(nullable: false),
+                        Password = c.String(),
                         AuthCode = c.String(),
                         AccessToken = c.String(),
                         RefreshToken = c.String(),
-                        TokenExpires = c.Int(),
-                        TokenRequested = c.DateTime(),
+                        TokenExpires = c.Int(nullable: false),
+                        TokenRequested = c.DateTime(nullable: false),
                         UserMLA = c.String(),
                         Active = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.Id);
+            
         }
         
         public override void Down()

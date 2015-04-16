@@ -14,8 +14,6 @@ namespace Model.DBInitializer
 
         public MultipayContext() : base("name=MultipayContext")
         {
-            this.Configuration.LazyLoadingEnabled = true;
-            Configuration.AutoDetectChangesEnabled = true;
         }
 
         public DbSet<User> Users { get; set; }

@@ -1,17 +1,19 @@
-using System.Data.Entity.Migrations;
-using Model.DBInitializer;
-using Model.Entities;
-
 namespace Model.Migrations
 {
-    internal sealed class Configuration : DbMigrationsConfiguration<MultipayContext>
+    using Model.Entities;
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Migrations;
+    using System.Linq;
+
+    internal sealed class Configuration : DbMigrationsConfiguration<Model.DBInitializer.MultipayContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(MultipayContext context)
+        protected override void Seed(Model.DBInitializer.MultipayContext context)
         {
             //  This method will be called after migrating to the latest version.
 
@@ -26,9 +28,9 @@ namespace Model.Migrations
             //    );
             //
             context.Users.AddOrUpdate(x => x.Id,
-        new User() { Id = 1, Email = "pepe@gmail.com", Name = "Pepe123", Surname = "Pepe123", Password = "abc123", Active = true},
-        new User() { Id = 2, Email = "test@hotmail.com", Name = "TestABC", Surname = "Pepe123", Password = "abc123", Active = true},
-        new User() { Id = 3, Email = "prueba@gmail.com", Name = "Prueba", Surname = "Pepe123", Password = "abc123", Active = true}
+        new User() { Id = 1, Email = "pepe@gmail.com", Name = "Pepe123", Surname = "Pepe123", Password = "abc123", TokenRequested = new DateTime(2015, 08, 30), Active = true },
+        new User() { Id = 2, Email = "test@hotmail.com", Name = "TestABC", Surname = "Pepe123", Password = "abc123", TokenRequested = new DateTime(2016, 03, 25), Active = true },
+        new User() { Id = 3, Email = "prueba@gmail.com", Name = "Prueba", Surname = "Pepe123", Password = "abc123", TokenRequested = new DateTime(2015, 10, 10), Active = true }
         );
             context.SaveChanges(); 
         }
