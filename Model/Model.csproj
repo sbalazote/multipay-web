@@ -50,6 +50,10 @@
     <Compile Include="DAOs\IUserDAO.cs" />
     <Compile Include="DAOs\UserDAO.cs" />
     <Compile Include="DBInitializer\MultipayContext.cs" />
+    <Compile Include="Entities\Address.cs" />
+    <Compile Include="Entities\Identification.cs" />
+    <Compile Include="Entities\Phone.cs" />
+    <Compile Include="Entities\Token.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Migrations\201504161843498_Initial.cs" />
     <Compile Include="Migrations\201504161843498_Initial.Designer.cs">

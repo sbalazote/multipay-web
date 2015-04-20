@@ -23,8 +23,8 @@ namespace Multipay.Controllers
             Log.Debug("AuthorizationController.cs" + "   code: " + code + "email: " + email);
 
             // obtengo el usuario por el mail
-            User User = UserService.GetByEmail(email);
-
+            var user = (Seller)UserService.GetByEmail(email);
+            
             string GrantType = "authorization_code";
             string ClientId = "3108634673635661";
             string ClientSecret = "4qCgUNhtRA3BnMJlAOjoXFZLT2EobUWJ";
@@ -64,13 +64,13 @@ namespace Multipay.Controllers
             response.Close ();
 
             //TODO guardar los datos de tokens en el usuario.
-            AuthorizationTokenDTO AuthToken = JsonConvert.DeserializeObject<AuthorizationTokenDTO>(responseFromServer);
-            User.AccessToken = AuthToken.AccessToken;
-            User.TokenExpires = AuthToken.ExpiresIn;
-            User.RefreshToken = AuthToken.RefreshToken;
-            UserService.Save(User);
+            var AuthToken = JsonConvert.DeserializeObject<AuthorizationTokenDTO>(responseFromServer);
+            user.Token.AccessToken = AuthToken.AccessToken;
+            user.Token.Expiration = AuthToken.ExpiresIn;
+            user.Token.RefreshToken = AuthToken.RefreshToken;
+            UserService.Save(user);
 
             return AuthToken.AccessToken;
         }
-    }
+    } 
 }

@@ -18,17 +18,17 @@ namespace Multipay.Controllers
         public string GetAuthenticationToken(string email)
         {
             //TODO checkear en la db si el tiempo expiro para el token, si es asi pedir uno nuevo. select x el email del seller.
-            User User = UserService.GetByEmail(email);
-            DateTime ActualDT = new DateTime();
-            DateTime TokenRequestedDT = User.TokenRequested;
+            var user = UserService.GetByEmail(email);
+            var actualDT = new DateTime();
+            var tokenRequestedDT =((Seller)user).Token.RequestedTime;
             
             //token expiro
-            if (ActualDT.CompareTo(TokenRequestedDT.AddSeconds(User.TokenExpires)) > 0)
+            if (actualDT.CompareTo(tokenRequestedDT.AddSeconds(((Seller)user).Token.Expiration)) > 0)
             {
                 string GrantType = "refresh_token";
                 string ClientId = "3108634673635661";
                 string ClientSecret = "4qCgUNhtRA3BnMJlAOjoXFZLT2EobUWJ";
-                string RefreshToken = User.RefreshToken;
+                string RefreshToken = ((Seller)user).Token.RefreshToken;
                 string postString = string.Format("grant_type={0}&client_id={1}&client_secret={2}&refresh_token={3}", GrantType, ClientId, ClientSecret, RefreshToken);
 
                 HttpWebRequest request = WebRequest.Create("https://api.mercadolibre.com/oauth/token") as HttpWebRequest;
@@ -68,7 +68,7 @@ namespace Multipay.Controllers
                 //token no expiro, devuelvo el access token del user.
             else
             {
-                return User.AccessToken;
+                return ((Seller)user).Token.AccessToken;
             }
         }
     }
