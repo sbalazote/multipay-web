@@ -17,7 +17,7 @@ namespace Model.Entities
     public class Buyer : User
     {
         public string LastName { get; set; }
-        public Identification Identification { get; set; }
+        public virtual Identification Identification { get; set; }
         public Address Address { get; set; }
         public Phone Phone { get; set; }
     }
@@ -25,6 +25,6 @@ namespace Model.Entities
     public class Seller : User
     {
         public string AuthCode { get; set; }
-        public Token Token { get; set; }
+        public virtual Token Token { get; set; }
     }
 }
