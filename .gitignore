@@ -187,3 +187,10 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+/Model/Migrations/201504170045229_SellerToken.cs
+/Model/Migrations/201504170045229_SellerToken.Designer.cs
+/Model/Migrations/201504170045229_SellerToken.resx
+/Multipay/Global.asax
+/Multipay/log-file.txt
+/Model/Entities/Seller.cs
+/Model/Entities/Token.cs

@@ -3,7 +3,7 @@ namespace Model.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class EntitiesMigration : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -52,37 +52,38 @@ namespace Model.Migrations
                     })
                 .PrimaryKey(t => t.Id);
             
-            AddColumn("dbo.Users", "Date", c => c.DateTime(nullable: false));
-            AddColumn("dbo.Users", "LastName", c => c.String());
-            AddColumn("dbo.Users", "Discriminator", c => c.String(nullable: false, maxLength: 128));
-            AddColumn("dbo.Users", "Address_Id", c => c.Int());
-            AddColumn("dbo.Users", "Identification_Id", c => c.Int());
-            AddColumn("dbo.Users", "Phone_Id", c => c.Int());
-            AddColumn("dbo.Users", "Token_Id", c => c.Int());
-            CreateIndex("dbo.Users", "Address_Id");
-            CreateIndex("dbo.Users", "Identification_Id");
-            CreateIndex("dbo.Users", "Phone_Id");
-            CreateIndex("dbo.Users", "Token_Id");
-            AddForeignKey("dbo.Users", "Address_Id", "dbo.Addresses", "Id");
-            AddForeignKey("dbo.Users", "Identification_Id", "dbo.Identifications", "Id");
-            AddForeignKey("dbo.Users", "Phone_Id", "dbo.Phones", "Id");
-            AddForeignKey("dbo.Users", "Token_Id", "dbo.Tokens", "Id");
-            DropColumn("dbo.Users", "Surname");
-            DropColumn("dbo.Users", "AccessToken");
-            DropColumn("dbo.Users", "RefreshToken");
-            DropColumn("dbo.Users", "TokenExpires");
-            DropColumn("dbo.Users", "TokenRequested");
-            DropColumn("dbo.Users", "UserMLA");
+            CreateTable(
+                "dbo.Users",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Email = c.String(),
+                        Name = c.String(),
+                        Date = c.DateTime(nullable: false),
+                        Password = c.String(),
+                        Active = c.Boolean(nullable: false),
+                        LastName = c.String(),
+                        AuthCode = c.String(),
+                        Discriminator = c.String(nullable: false, maxLength: 128),
+                        Address_Id = c.Int(),
+                        Identification_Id = c.Int(),
+                        Phone_Id = c.Int(),
+                        Token_Id = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Addresses", t => t.Address_Id)
+                .ForeignKey("dbo.Identifications", t => t.Identification_Id)
+                .ForeignKey("dbo.Phones", t => t.Phone_Id)
+                .ForeignKey("dbo.Tokens", t => t.Token_Id)
+                .Index(t => t.Address_Id)
+                .Index(t => t.Identification_Id)
+                .Index(t => t.Phone_Id)
+                .Index(t => t.Token_Id);
+            
         }
         
         public override void Down()
         {
-            AddColumn("dbo.Users", "UserMLA", c => c.String());
-            AddColumn("dbo.Users", "TokenRequested", c => c.DateTime(nullable: false));
-            AddColumn("dbo.Users", "TokenExpires", c => c.Int(nullable: false));
-            AddColumn("dbo.Users", "RefreshToken", c => c.String());
-            AddColumn("dbo.Users", "AccessToken", c => c.String());
-            AddColumn("dbo.Users", "Surname", c => c.String());
             DropForeignKey("dbo.Users", "Token_Id", "dbo.Tokens");
             DropForeignKey("dbo.Users", "Phone_Id", "dbo.Phones");
             DropForeignKey("dbo.Users", "Identification_Id", "dbo.Identifications");
@@ -91,13 +92,7 @@ namespace Model.Migrations
             DropIndex("dbo.Users", new[] { "Phone_Id" });
             DropIndex("dbo.Users", new[] { "Identification_Id" });
             DropIndex("dbo.Users", new[] { "Address_Id" });
-            DropColumn("dbo.Users", "Token_Id");
-            DropColumn("dbo.Users", "Phone_Id");
-            DropColumn("dbo.Users", "Identification_Id");
-            DropColumn("dbo.Users", "Address_Id");
-            DropColumn("dbo.Users", "Discriminator");
-            DropColumn("dbo.Users", "LastName");
-            DropColumn("dbo.Users", "Date");
+            DropTable("dbo.Users");
             DropTable("dbo.Tokens");
             DropTable("dbo.Phones");
             DropTable("dbo.Identifications");

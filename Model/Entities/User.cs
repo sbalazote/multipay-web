@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Net.Sockets;
-using System.Security.Principal;
 
 namespace Model.Entities
 {
-    public class User
+    public abstract class User
     {
         public int Id { get; set; }
         public string Email { get; set; }
@@ -18,8 +16,8 @@ namespace Model.Entities
     {
         public string LastName { get; set; }
         public virtual Identification Identification { get; set; }
-        public Address Address { get; set; }
-        public Phone Phone { get; set; }
+        public virtual Address Address { get; set; }
+        public virtual Phone Phone { get; set; }
     }
 
     public class Seller : User

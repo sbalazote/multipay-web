@@ -55,13 +55,9 @@
     <Compile Include="Entities\Phone.cs" />
     <Compile Include="Entities\Token.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Migrations\201504161843498_Initial.cs" />
-    <Compile Include="Migrations\201504161843498_Initial.Designer.cs">
-      <DependentUpon>201504161843498_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504240454511_EntitiesMigration.cs" />
-    <Compile Include="Migrations\201504240454511_EntitiesMigration.Designer.cs">
-      <DependentUpon>201504240454511_EntitiesMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201504272105500_Initial.cs" />
+    <Compile Include="Migrations\201504272105500_Initial.Designer.cs">
+      <DependentUpon>201504272105500_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,11 +69,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201504161843498_Initial.resx">
-      <DependentUpon>201504161843498_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504240454511_EntitiesMigration.resx">
-      <DependentUpon>201504240454511_EntitiesMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201504272105500_Initial.resx">
+      <DependentUpon>201504272105500_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
