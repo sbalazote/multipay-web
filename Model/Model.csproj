@@ -51,7 +51,11 @@
     <Compile Include="DAOs\UserDAO.cs" />
     <Compile Include="DBInitializer\MultipayContext.cs" />
     <Compile Include="Entities\Address.cs" />
+    <Compile Include="Entities\Device.cs" />
     <Compile Include="Entities\Identification.cs" />
+    <Compile Include="Entities\MarketPlace.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Entities\Phone.cs" />
     <Compile Include="Entities\Token.cs" />
     <Compile Include="Entities\User.cs" />

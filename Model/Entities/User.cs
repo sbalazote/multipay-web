@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.AccessControl;
 
 namespace Model.Entities
 {
@@ -10,6 +11,7 @@ namespace Model.Entities
         public DateTime Date { get; set; } 
         public string Password { get; set; }
         public bool Active { get; set; }
+        public virtual Device Device { get; set; }
     }
 
     public class Buyer : User
