@@ -22,13 +22,13 @@ namespace Multipay.Controllers
             int userId = -1;
             String message = "";
             String userName = "";
-            String password = loginRequest.UserPassword;
+            String password = loginRequest.Password;
 
-            User user = UserService.GetByEmail(loginRequest.UserEmail);
+            User user = UserService.GetByEmail(loginRequest.Email);
             if (user != null && password != null)
             {
 
-                if (loginRequest.UserPassword.Equals(user.Password))
+                if (loginRequest.Password.Equals(user.Password))
                 {
                     if (user.Active)
                     {

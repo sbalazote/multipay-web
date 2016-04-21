@@ -161,18 +161,18 @@
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Controllers\Scripts\bootstrap.js" />
+    <Content Include="Controllers\Scripts\bootstrap.min.js" />
     <Content Include="WebForm1.aspx" />
-    <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <None Include="Controllers\Scripts\jquery-1.10.2-vsdoc.js" />
+    <Content Include="Controllers\Scripts\jquery-1.10.2.js" />
+    <Content Include="Controllers\Scripts\jquery-1.10.2.min.js" />
+    <None Include="Controllers\Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Controllers\Scripts\jquery.validate.js" />
+    <Content Include="Controllers\Scripts\jquery.validate.min.js" />
+    <Content Include="Controllers\Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Controllers\Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Controllers\Scripts\modernizr-2.6.2.js" />
     <Content Include="Views\PushNotification.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -188,7 +188,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DTOs\AuthorizationTokenDTO.cs" />
     <Compile Include="DTOs\LoginRequestDTO.cs" />
     <Compile Include="DTOs\LoginResponseDTO.cs" />
@@ -219,7 +219,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Properties\PublishProfiles\s.pubxml" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Controllers\Scripts\jquery-1.10.2.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

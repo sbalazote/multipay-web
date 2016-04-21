@@ -16,6 +16,7 @@ namespace Model.Entities
 
     public class Buyer : User
     {
+        public string MPCostumerId { get; set; }
         public string LastName { get; set; }
         public virtual Identification Identification { get; set; }
         public virtual Address Address { get; set; }

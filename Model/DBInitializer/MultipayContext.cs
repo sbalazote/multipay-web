@@ -25,6 +25,11 @@ namespace Model.DBInitializer
         public DbSet<Phone> Phones { get; set; }
 
         public DbSet<Token> Tokens { get; set; }
+
+        public DbSet<Device> Devices { get; set; }
+        
+        public DbSet<MarketPlace> MarketPlaces { get; set; }
+
     
     }
 }

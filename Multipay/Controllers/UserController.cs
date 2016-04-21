@@ -10,9 +10,10 @@ using Model.Entities;
 
 namespace Multipay.Controllers
 {
-    public class UsersController : ApiController
+    public class UserController : ApiController
     {
         private MultipayContext db = new MultipayContext();
+        private IWebSecurity WebSecurity { get; set; }
 
         // GET: api/Users
         public IQueryable<User> GetUsers()
