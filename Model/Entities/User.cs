@@ -16,7 +16,7 @@ namespace Model.Entities
 
     public class Buyer : User
     {
-        public string MPCostumerId { get; set; }
+        public string MPCustomerId { get; set; }
         public string LastName { get; set; }
         public virtual Identification Identification { get; set; }
         public virtual Address Address { get; set; }
@@ -27,5 +27,6 @@ namespace Model.Entities
     {
         public string AuthCode { get; set; }
         public virtual Token Token { get; set; }
+        public string SocialNetworkId { get; set; }
     }
 }
