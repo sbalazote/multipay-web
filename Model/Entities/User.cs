@@ -12,6 +12,7 @@ namespace Model.Entities
         public string Password { get; set; }
         public bool Active { get; set; }
         public virtual Device Device { get; set; }
+        public string SocialNetworkId { get; set; }
     }
 
     public class Buyer : User
@@ -27,6 +28,5 @@ namespace Model.Entities
     {
         public string AuthCode { get; set; }
         public virtual Token Token { get; set; }
-        public string SocialNetworkId { get; set; }
     }
 }
