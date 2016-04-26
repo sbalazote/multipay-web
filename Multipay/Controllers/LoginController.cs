@@ -23,23 +23,17 @@ namespace Multipay.Controllers
         private static readonly Encoding Encoding = Encoding.UTF8; 
 
         [HttpPost]
-        public LoginResponseDTO AttemptLogin(LoginRequestDTO loginRequest)
+        [Route("api/attemptNativeLogin")]
+        public LoginResponseDTO AttemptNativeLogin(LoginRequestDTO loginRequest)
         {
-            LoginResponseDTO loginResponse = new LoginResponseDTO();
-            loginResponse.Valid = true;
-            loginResponse.Message = "Ok";
-            loginResponse.UserId = 1;
-            loginResponse.Username = "";
+            var loginValid = false;
+            var userId = -1;
+            var message = "";
+            var userName = "";
+            var userEmail = "";
+            var password = loginRequest.Password;
 
-            return loginResponse;
-            /*LoginResponseDTO loginResponse = null;
-            Boolean loginValid = false;
-            int userId = -1;
-            String message = "";
-            String userName = "";
-            String password = loginRequest.Password;
-
-            User user = UserService.GetByEmail(loginRequest.Email);
+            var user = UserService.GetByEmail(loginRequest.Email);
             if (user != null && password != null)
             {
 
@@ -51,6 +45,7 @@ namespace Multipay.Controllers
                         loginValid = true;
                         userId = user.Id;
                         userName = user.Name;
+                        userEmail = user.Email;
                     }
                     else
                     {
@@ -68,19 +63,28 @@ namespace Multipay.Controllers
                 message = "Usuario / contraseña incorrecta.";
             }
 
-            loginResponse = new LoginResponseDTO();
-            loginResponse.Valid = loginValid;
-            loginResponse.Message = message;
-            loginResponse.UserId = userId;
-            loginResponse.Username = userName;
+            var loginResponse = new LoginResponseDTO
+            {
+                Valid = loginValid,
+                Message = message,
+                UserId = userId,
+                UserName = userName,
+                UserEmail = userEmail
+            };
 
-            return loginResponse;*/
+            return loginResponse;
         }
 
         [HttpPost]
         [Route("api/googleTokenInfo")]
-        public string GoogleTokenInfo([FromBody] string tokenId)
+        public LoginResponseDTO GoogleTokenInfo([FromBody] string tokenId)
         {
+            var loginValid = false;
+            var userId = -1;
+            var message = "";
+            var userName = "";
+            var userEmail = "";
+
             var client = new RestClient("https://www.googleapis.com");
 
             var request = new RestRequest("/oauth2/v3/tokeninfo", Method.GET);
@@ -96,10 +100,15 @@ namespace Multipay.Controllers
                 if (googleTokenInfoDto.Aud == GoogleTokenInfoDTO.GoogleOauthServerClientId)
                 {
                     // TODO intentar autenticar usuario con sus parametros.
-                    var Id = googleTokenInfoDto.Sub;
-                    var Email = googleTokenInfoDto.Email;
-                    var FirstName = googleTokenInfoDto.GivenName;
-                    var LastName = googleTokenInfoDto.FamilyName;
+                    var id = googleTokenInfoDto.Sub;
+                    var email = googleTokenInfoDto.Email;
+                    var firstName = googleTokenInfoDto.GivenName;
+                    var lastName = googleTokenInfoDto.FamilyName;
+
+                    loginValid = true;
+                    // TODO setear el id de la base si es que existe.
+                    userName = firstName;
+                    userEmail = email;
                 }
                 else
                 {
@@ -111,20 +120,35 @@ namespace Multipay.Controllers
                 // TODO ERROR API Google
             }
 
-            return "Ok";
+            var loginResponse = new LoginResponseDTO
+            {
+                Valid = loginValid,
+                Message = message,
+                UserId = userId,
+                UserName = userName,
+                UserEmail = userEmail
+            };
+
+            return loginResponse;
         }
 
         [HttpPost]
         [Route("api/facebookTokenInfo")]
-        public string FacebookTokenInfo([FromBody] string accessToken)
+        public LoginResponseDTO FacebookTokenInfo([FromBody] string accessToken)
         {
+            var loginValid = false;
+            var userId = -1;
+            var message = "";
+            var userName = "";
+            var userEmail = "";
+
             var client = new RestClient("https://graph.facebook.com");
 
             var keyByte = Encoding.GetBytes(AppSecretProof);
             var hmacsha256 = new HMACSHA256(keyByte);
             byte[] hashedBytes = hmacsha256.ComputeHash(Encoding.GetBytes(accessToken));
 
-            StringBuilder output = new StringBuilder();
+            var output = new StringBuilder();
 
             for (int i = 0; i < hashedBytes.Length; i++)
                 output.Append(hashedBytes[i].ToString("x2").ToLower());
@@ -139,25 +163,32 @@ namespace Multipay.Controllers
             {
                 FacebookTokenInfoDTO facebookTokenInfoDto = response.Data;
                 // TODO intentar autenticar usuario con sus parametros.
-                var Id = facebookTokenInfoDto.Id;
-                var Email = facebookTokenInfoDto.Email;
-                var FirstName = facebookTokenInfoDto.FirstName;
-                var LastName = facebookTokenInfoDto.LastName;
+                var id = facebookTokenInfoDto.Id;
+                var email = facebookTokenInfoDto.Email;
+                var firstName = facebookTokenInfoDto.FirstName;
+                var lastName = facebookTokenInfoDto.LastName;
+
+                loginValid = true;
+                // TODO setear el id de la base si es que existe.
+                userName = firstName;
+                userEmail = email;
             }
             else
             {
                 // TODO ERROR API Facebook
             }
 
-            return "Ok";
+            var loginResponse = new LoginResponseDTO
+            {
+                Valid = loginValid,
+                Message = message,
+                UserId = userId,
+                UserName = userName,
+                UserEmail = userEmail
+            };
+
+            return loginResponse;
         }
 
-        static string ByteToString(byte[] buff)
-        {
-            string sbinary = "";
-            for (int i = 0; i < buff.Length; i++)
-                sbinary += buff[i].ToString("X2"); /* hex format */
-            return sbinary;
-        }  
     }
 }
