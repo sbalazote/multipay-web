@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using mercadopago;
+using Multipay.DTOs;
+using Newtonsoft.Json;
 
 namespace Multipay.Controllers
 {
@@ -16,26 +14,45 @@ namespace Multipay.Controllers
         [Route("api/getPayment")]
         public string GetPayment(string paymentId)
         {
-            MP mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
+            var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
+            mp.sandboxMode(true);
 
-            Hashtable paymentInfo = mp.getPayment(paymentId);
+            var paymentInfo = mp.getPayment(paymentId);
 
-            Console.Write(paymentInfo["response"]);
+            var response = JsonConvert.SerializeObject(paymentInfo["response"]);
 
-            return paymentInfo["response"].ToString();
+            return response;
         }
 
         [HttpPost]
         [Route("api/doPayment")]
-        public string DoPayment(string paymentData)
+        public string DoPayment([FromBody] PaymentDataDTO paymentData)
         {
-            MP mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
+            var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
+            mp.sandboxMode(true);
 
-            Hashtable paymentInfo = mp.post("/v1/payments", paymentData);
+            var transactionAmount = paymentData.TransactionAmount;
+            var cardToken = paymentData.CardToken;
+            var paymentMethodId = paymentData.PaymentMethodId;
+            var customerId = paymentData.CustomerId;
 
-            Console.Write(paymentInfo["response"]);
+            var data = "{" +
+                "\"transaction_amount\": " + transactionAmount + "," +
+                "\"token\": \"" + cardToken + "\"," +
+                "\"description\": \"Test Item 01\"," +
 
-            return paymentInfo["response"].ToString();
+                "\"installments\": 1," +
+                "\"payment_method_id\": \"" + paymentMethodId + "\"," +
+                "\"payer\": {" +
+                    "\"id\": \"" + customerId + "\"" +
+                    "}" +
+                "}";
+
+            var paymentInfo = mp.post("/v1/payments", data);
+
+            var response = JsonConvert.SerializeObject(paymentInfo["response"]);
+
+            return response;
         }
     }
 }
