@@ -96,10 +96,6 @@
     <Compile Include="Entities\Phone.cs" />
     <Compile Include="Entities\Token.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Migrations\201506010411519_FullMigration.cs" />
-    <Compile Include="Migrations\201506010411519_FullMigration.Designer.cs">
-      <DependentUpon>201506010411519_FullMigration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -108,11 +104,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201506010411519_FullMigration.resx">
-      <DependentUpon>201506010411519_FullMigration.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Security\" />
