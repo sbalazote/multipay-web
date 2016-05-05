@@ -96,9 +96,9 @@
     <Compile Include="Entities\Phone.cs" />
     <Compile Include="Entities\Token.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Migrations\201506010411519_FullMigration.cs" />
-    <Compile Include="Migrations\201506010411519_FullMigration.Designer.cs">
-      <DependentUpon>201506010411519_FullMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201605041523068_04_05_2016.cs" />
+    <Compile Include="Migrations\201605041523068_04_05_2016.Designer.cs">
+      <DependentUpon>201605041523068_04_05_2016.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -110,12 +110,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201506010411519_FullMigration.resx">
-      <DependentUpon>201506010411519_FullMigration.cs</DependentUpon>
-    </EmbeddedResource>
+    <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Security\" />
+    <EmbeddedResource Include="Migrations\201605041523068_04_05_2016.resx">
+      <DependentUpon>201605041523068_04_05_2016.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

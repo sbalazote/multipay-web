@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
+using System.IO;
 using System.Net;
 using System.Text;
-using System.IO;
 
-namespace Multipay
+namespace Multipay.Views
 {
     public partial class PushNotification : System.Web.UI.Page
     {

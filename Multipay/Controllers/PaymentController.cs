@@ -36,6 +36,8 @@ namespace Multipay.Controllers
             var paymentMethodId = paymentData.PaymentMethodId;
             var customerId = paymentData.CustomerId;
 
+            var applicationFee = 0.03f * transactionAmount;
+
             var data = "{" +
                 "\"transaction_amount\": " + transactionAmount + "," +
                 "\"token\": \"" + cardToken + "\"," +
@@ -43,6 +45,7 @@ namespace Multipay.Controllers
 
                 "\"installments\": 1," +
                 "\"payment_method_id\": \"" + paymentMethodId + "\"," +
+                "\"application_fee\": " + applicationFee + "," +
                 "\"payer\": {" +
                     "\"id\": \"" + customerId + "\"" +
                     "}" +

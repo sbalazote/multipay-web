@@ -7,18 +7,18 @@ namespace Model.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class FullMigration : IMigrationMetadata
+    public sealed partial class _04_05_2016 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(FullMigration));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(_04_05_2016));
         
         string IMigrationMetadata.Id
         {
-            get { return "201506010411519_FullMigration"; }
+            get { return "201605041523068_04_05_2016"; }
         }
         
         string IMigrationMetadata.Source
         {
-            get { return null; }
+            get { return Resources.GetString("Source"); }
         }
         
         string IMigrationMetadata.Target

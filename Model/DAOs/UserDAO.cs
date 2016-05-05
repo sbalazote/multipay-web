@@ -12,7 +12,8 @@ namespace Model.DAOs
 
         public void Save(User User)
         {
-            throw new NotImplementedException();
+            db.Users.Attach(User);
+            db.SaveChanges();
         }
 
         public User Get(int Id)

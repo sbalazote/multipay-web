@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PushNotification.aspx.cs" Inherits="Multipay.PushNotification" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PushNotification.aspx.cs" Inherits="Multipay.Views.PushNotification" %>
 
 <!DOCTYPE html>
 
