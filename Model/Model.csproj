@@ -96,9 +96,9 @@
     <Compile Include="Entities\Phone.cs" />
     <Compile Include="Entities\Token.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Migrations\201605041523068_04_05_2016.cs" />
-    <Compile Include="Migrations\201605041523068_04_05_2016.Designer.cs">
-      <DependentUpon>201605041523068_04_05_2016.cs</DependentUpon>
+    <Compile Include="Migrations\201605052153538_UserId_en_Seller.cs" />
+    <Compile Include="Migrations\201605052153538_UserId_en_Seller.Designer.cs">
+      <DependentUpon>201605052153538_UserId_en_Seller.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,8 +113,8 @@
     <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201605041523068_04_05_2016.resx">
-      <DependentUpon>201605041523068_04_05_2016.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201605052153538_UserId_en_Seller.resx">
+      <DependentUpon>201605052153538_UserId_en_Seller.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

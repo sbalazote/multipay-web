@@ -54,6 +54,7 @@ namespace Multipay.Controllers
                     Type = authorizationTokenDto.TokenType
                 };
                 user.Token = token;
+                user.UserId = authorizationTokenDto.UserId;
                 UserService.Save(user);
                 return true;
             }
