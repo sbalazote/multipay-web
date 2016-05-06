@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations.Model;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Model.DBInitializer;
 using Model.Entities;
 
@@ -10,42 +11,46 @@ namespace Model.DAOs
 {
     public class UserDAO : IUserDAO
     {
-        private MultipayContext db = new MultipayContext();
+        private MultipayContext context = new MultipayContext();
 
         public void Save(User user)
         {
-            db.Entry(user).State = EntityState.Modified; 
-            db.SaveChanges();
+            context.SaveChanges();
+        }
+
+        public void Insert(User user)
+        {
+            context.Users.Add(user);
         }
 
         public User Get(int id)
         {
-            throw new NotImplementedException();
+            context.Users.Find(id);
         }
 
         public User GetByEmail(string email)
         {
-            return db.Users.SingleOrDefault(x => (Equals(x.Email, email)));
+            return context.Users.SingleOrDefault(x => (Equals(x.Email, email)));
         }
 
         public User GetByEmail(string email, bool isSeller)
         {
-            return db.Users.SingleOrDefault(x => (Equals(x.Email, email)) && x is Seller);
+            return context.Users.SingleOrDefault(x => (Equals(x.Email, email)) && x is Seller);
         }
 
         public bool Exists(string email)
         {
-            return db.Users.Any(o => Equals(o.Email, email));
+            return context.Users.Any(o => Equals(o.Email, email));
         }
 
         public bool Exists(string email, bool isSeller)
         {
-            return db.Users.Any(o => Equals(o.Email, email) && o is Seller);
+            return context.Users.Any(o => Equals(o.Email, email) && o is Seller);
         }
 
-        public List<User> GetAll()
+        public IQueryable<User> GetAll()
         {
-            throw new NotImplementedException();
+           return context.Users;
         }
 
         public void Delete(int userId)

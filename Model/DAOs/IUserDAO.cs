@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Model.Entities;
 
 namespace Model.DAOs
@@ -13,7 +14,7 @@ namespace Model.DAOs
 
         bool Exists(string email);
 
-        List<User> GetAll();
+        IQueryable<User> GetAll();
 
         void Delete(int userId);
     }
