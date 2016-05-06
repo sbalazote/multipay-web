@@ -5,16 +5,16 @@ namespace Model.DAOs
 {
     interface IUserDAO
     {
-         void Save(User User);
+         void Save(User user);
 
-        User Get(int Id);
+        User Get(int id);
 
-        User GetByEmail(string Email);
+        User GetByEmail(string email);
 
-        bool Exists(string Email);
+        bool Exists(string email);
 
         List<User> GetAll();
 
-        void Delete(int UserId);
+        void Delete(int userId);
     }
 }

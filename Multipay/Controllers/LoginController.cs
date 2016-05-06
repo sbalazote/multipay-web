@@ -1,6 +1,9 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Security.Cryptography;
 using System.Text;
+using mercadopago;
+using Model.Entities;
 using Multipay.DTO;
 using System.Net;
 using System.Web.Http;
@@ -27,7 +30,7 @@ namespace Multipay.Controllers
             var userEmail = "";
             var password = loginRequest.Password;
 
-            var user = UserService.GetByEmail(loginRequest.Email);
+            var user = UserService.GetByEmail(loginRequest.Email, loginRequest.IsSeller);
             if (user != null && password != null)
             {
 
@@ -71,7 +74,7 @@ namespace Multipay.Controllers
 
         [HttpPost]
         [Route("api/googleTokenInfo")]
-        public LoginResponseDTO GoogleTokenInfo([FromBody] string tokenId)
+        public LoginResponseDTO GoogleTokenInfo(LoginRequestDTO loginRequest)
         {
             var loginValid = false;
             var userId = -1;
@@ -82,7 +85,7 @@ namespace Multipay.Controllers
             var client = new RestClient(ConfigurationManager.AppSettings["GOOGLE_API_BASE_URL"]);
 
             var request = new RestRequest("/oauth2/v3/tokeninfo", Method.GET);
-            request.AddParameter("id_token", tokenId); // adds to POST or URL querystring based on Method
+            request.AddParameter("id_token", loginRequest.SocialToken); // adds to POST or URL querystring based on Method
 
             var response = (RestResponse<GoogleTokenInfoDTO>) client.Execute<GoogleTokenInfoDTO>(request);
             
@@ -93,25 +96,75 @@ namespace Multipay.Controllers
                 // Si el parametro Aud es igual al OauthClientId para el que fue generado en Android esta Ok.
                 if (googleTokenInfoDto.Aud == GoogleTokenInfoDTO.GoogleOauthServerClientId)
                 {
-                    // TODO intentar autenticar usuario con sus parametros.
                     var id = googleTokenInfoDto.Sub;
                     var email = googleTokenInfoDto.Email;
                     var firstName = googleTokenInfoDto.GivenName;
                     var lastName = googleTokenInfoDto.FamilyName;
 
-                    loginValid = true;
-                    // TODO setear el id de la base si es que existe.
-                    userName = firstName;
-                    userEmail = email;
+                    var existsUser = UserService.Exists(loginRequest.Email, loginRequest.IsSeller);
+                    if (!existsUser)
+                    {
+                        if (loginRequest.IsSeller)
+                        {
+                            var seller = new Seller
+                            {
+                                Email = email,
+                                Name = firstName,
+                                Date = DateTime.Now,
+                                Active = true,
+                                Device = new Device(),
+                                SocialNetworkId = id
+                            };
+                            UserService.Save(seller);
+                        }
+                        else
+                        {
+                            var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
+                            mp.sandboxMode(true);
+                            var customer = mp.post("/v1/customers", "{\"email\": \"" + email + "\"}");
+                            // TODO devuelve un Dictionary hay q parsear ese id que es el de Customer
+                            var customerId = customer["response"];
+                            var buyer = new Buyer
+                            {
+                                Email = email,
+                                Name = firstName,
+                                LastName = lastName,
+                                Date = DateTime.Now,
+                                Active = true,
+                                Device = new Device(),
+                                SocialNetworkId = id,
+                                MPCustomerId = (string) customerId
+                            };
+                            UserService.Save(buyer);
+                        }
+                        loginValid = true;
+                        userName = googleTokenInfoDto.Name;
+                        userEmail = email;
+                    }
+                    else
+                    {
+                        var user = UserService.GetByEmail(loginRequest.Email);
+                        if (user.Active)
+                        {
+                            loginValid = true;
+                            userId = user.Id;
+                            userName = user.Name;
+                            userEmail = user.Email;
+                        }
+                        else
+                        {
+                            message = "Usuario inactivo.";
+                        }
+                    }
                 }
                 else
                 {
-                    // TODO ERROR NO COINCIDE EL OAUTH CLIENT ID PARA EL QUE FUE GENERADO EL TOKEN
+                    message = "ERROR - NO COINCIDE EL OAUTH CLIENT ID PARA EL QUE FUE GENERADO EL TOKEN";
                 }
             }
             else
             {
-                // TODO ERROR API Google
+                message = "ERROR - API Google";
             }
 
             var loginResponse = new LoginResponseDTO
@@ -128,7 +181,7 @@ namespace Multipay.Controllers
 
         [HttpPost]
         [Route("api/facebookTokenInfo")]
-        public LoginResponseDTO FacebookTokenInfo([FromBody] string accessToken)
+        public LoginResponseDTO FacebookTokenInfo(LoginRequestDTO loginRequest)
         {
             var loginValid = false;
             var userId = -1;
@@ -140,7 +193,7 @@ namespace Multipay.Controllers
 
             var keyByte = Encoding.GetBytes(ConfigurationManager.AppSettings["FACEBOOK_APP_SECRET_PROOF"]);
             var hmacsha256 = new HMACSHA256(keyByte);
-            byte[] hashedBytes = hmacsha256.ComputeHash(Encoding.GetBytes(accessToken));
+            byte[] hashedBytes = hmacsha256.ComputeHash(Encoding.GetBytes(loginRequest.SocialToken));
 
             var output = new StringBuilder();
 
@@ -148,7 +201,7 @@ namespace Multipay.Controllers
                 output.Append(hashedBytes[i].ToString("x2").ToLower());
 
             var request = new RestRequest("/me", Method.GET);
-            request.AddParameter("access_token", accessToken); // adds to POST or URL querystring based on Method
+            request.AddParameter("access_token", loginRequest.SocialToken); // adds to POST or URL querystring based on Method
             request.AddParameter("appsecret_proof", output.ToString());
 
             var response = (RestResponse<FacebookTokenInfoDTO>)client.Execute<FacebookTokenInfoDTO>(request);
@@ -162,14 +215,65 @@ namespace Multipay.Controllers
                 var firstName = facebookTokenInfoDto.FirstName;
                 var lastName = facebookTokenInfoDto.LastName;
 
-                loginValid = true;
-                // TODO setear el id de la base si es que existe.
-                userName = firstName;
-                userEmail = email;
+                var existsUser = UserService.Exists(loginRequest.Email, loginRequest.IsSeller);
+                if (!existsUser)
+                {
+                    if (loginRequest.IsSeller)
+                    {
+                        var seller = new Seller
+                        {
+                            Email = email,
+                            Name = firstName,
+                            Date = DateTime.Now,
+                            Active = true,
+                            Device = new Device(),
+                            SocialNetworkId = id
+                        };
+                        UserService.Save(seller);
+                    }
+                    else
+                    {
+                        var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
+                        mp.sandboxMode(true);
+                        var customer = mp.post("/v1/customers", "{\"email\": \"" + email + "\"}");
+                        // TODO devuelve un Dictionary hay q parsear ese id que es el de Customer
+                        var customerId = customer["id"];
+                        var buyer = new Buyer
+                        {
+                            Email = email,
+                            Name = firstName,
+                            LastName = lastName,
+                            Date = DateTime.Now,
+                            Active = true,
+                            Device = new Device(),
+                            SocialNetworkId = id,
+                            MPCustomerId = (string)customerId
+                        };
+                        UserService.Save(buyer);
+                    }
+                    loginValid = true;
+                    userName = facebookTokenInfoDto.Name;
+                    userEmail = email;
+                }
+                else
+                {
+                    var user = UserService.GetByEmail(loginRequest.Email);
+                    if (user.Active)
+                    {
+                        loginValid = true;
+                        userId = user.Id;
+                        userName = user.Name;
+                        userEmail = user.Email;
+                    }
+                    else
+                    {
+                        message = "Usuario inactivo.";
+                    }
+                }
             }
             else
             {
-                // TODO ERROR API Facebook
+                message = "ERROR - API Facebook";
             }
 
             var loginResponse = new LoginResponseDTO
@@ -180,9 +284,7 @@ namespace Multipay.Controllers
                 UserName = userName,
                 UserEmail = userEmail
             };
-
             return loginResponse;
         }
-
     }
 }

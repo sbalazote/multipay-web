@@ -8,29 +8,39 @@ namespace Services
     {
         private UserDAO userDAO = new UserDAO();
 
-        public void Save(User User)
+        public void Save(User user)
         {
-            userDAO.Save(User);
+            userDAO.Save(user);
         }
 
-        public User Get(int Id)
+        public User Get(int id)
         {
-            return userDAO.Get(Id);
+            return userDAO.Get(id);
         }
 
-        public User GetByEmail(string Email)
+        public User GetByEmail(string email)
         {
-            return userDAO.GetByEmail(Email);
+            return userDAO.GetByEmail(email);
         }
 
-        public bool Exists(string Email)
+        public User GetByEmail(string email, bool isSeller)
         {
-            return userDAO.Exists(Email);
+            return userDAO.GetByEmail(email, isSeller);
         }
 
-        public void Delete(int UserId)
+        public bool Exists(string email)
         {
-            userDAO.Delete(UserId);
+            return userDAO.Exists(email);
+        }
+
+        public bool Exists(string email, bool isSeller)
+        {
+            return userDAO.Exists(email, isSeller);
+        }
+
+        public void Delete(int userId)
+        {
+            userDAO.Delete(userId);
         }
 
         public List<User> GetAll()

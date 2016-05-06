@@ -27,5 +27,9 @@ namespace Multipay.DTO
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
+        [Required]
+        public string SocialToken { get; set; }
+        [Required]
+        public bool IsSeller { get; set; }
     }
 }

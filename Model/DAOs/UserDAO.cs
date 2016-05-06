@@ -12,25 +12,35 @@ namespace Model.DAOs
     {
         private MultipayContext db = new MultipayContext();
 
-        public void Save(User User)
+        public void Save(User user)
         {
-            db.Entry(User).State = EntityState.Modified; 
+            db.Entry(user).State = EntityState.Modified; 
             db.SaveChanges();
         }
 
-        public User Get(int Id)
+        public User Get(int id)
         {
             throw new NotImplementedException();
         }
 
-        public User GetByEmail(string Email)
+        public User GetByEmail(string email)
         {
-            return db.Users.SingleOrDefault(x => (x.Email == Email));
+            return db.Users.SingleOrDefault(x => (Equals(x.Email, email)));
         }
 
-        public bool Exists(string Email)
+        public User GetByEmail(string email, bool isSeller)
         {
-            throw new NotImplementedException();
+            return db.Users.SingleOrDefault(x => (Equals(x.Email, email)) && x is Seller);
+        }
+
+        public bool Exists(string email)
+        {
+            return db.Users.Any(o => Equals(o.Email, email));
+        }
+
+        public bool Exists(string email, bool isSeller)
+        {
+            return db.Users.Any(o => Equals(o.Email, email) && o is Seller);
         }
 
         public List<User> GetAll()
@@ -38,7 +48,7 @@ namespace Model.DAOs
             throw new NotImplementedException();
         }
 
-        public void Delete(int UserId)
+        public void Delete(int userId)
         {
             throw new NotImplementedException();
         }
