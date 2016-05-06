@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Migrations.Model;
 using System.Linq;
 using Model.DBInitializer;
 using Model.Entities;
@@ -12,7 +14,7 @@ namespace Model.DAOs
 
         public void Save(User User)
         {
-            db.Users.Attach(User);
+            db.Entry(User).State = EntityState.Modified; 
             db.SaveChanges();
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Configuration;
+using System.Security.Cryptography;
 using System.Text;
 using Multipay.DTO;
 using System.Net;
@@ -12,8 +13,6 @@ namespace Multipay.Controllers
     public class LoginController : ApiController
     {
         private UserService UserService = new UserService();
-
-        private const string AppSecretProof = "657df0797fbbec4aa19c24a12b2cc4bc";
 
         private static readonly Encoding Encoding = Encoding.UTF8; 
 
@@ -80,7 +79,7 @@ namespace Multipay.Controllers
             var userName = "";
             var userEmail = "";
 
-            var client = new RestClient("https://www.googleapis.com");
+            var client = new RestClient(ConfigurationManager.AppSettings["GOOGLE_API_BASE_URL"]);
 
             var request = new RestRequest("/oauth2/v3/tokeninfo", Method.GET);
             request.AddParameter("id_token", tokenId); // adds to POST or URL querystring based on Method
@@ -137,9 +136,9 @@ namespace Multipay.Controllers
             var userName = "";
             var userEmail = "";
 
-            var client = new RestClient("https://graph.facebook.com");
+            var client = new RestClient(ConfigurationManager.AppSettings["FACEBOKK_API_BASE_URL"]);
 
-            var keyByte = Encoding.GetBytes(AppSecretProof);
+            var keyByte = Encoding.GetBytes(ConfigurationManager.AppSettings["FACEBOOK_APP_SECRET_PROOF"]);
             var hmacsha256 = new HMACSHA256(keyByte);
             byte[] hashedBytes = hmacsha256.ComputeHash(Encoding.GetBytes(accessToken));
 

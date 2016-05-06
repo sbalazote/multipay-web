@@ -27,14 +27,14 @@ namespace Multipay.Controllers
             // obtengo el usuario por el mail
             var user = (Seller)UserService.GetByEmail(email);
 
-            var client = new RestClient("https://api.mercadolibre.com");
+            var client = new RestClient(ConfigurationManager.AppSettings["MP_API_BASE_URL"]);
 
             var request = new RestRequest("/oauth/token", Method.POST);
             request.AddParameter("client_id", ConfigurationManager.AppSettings["AppId"]);
             request.AddParameter("client_secret", ConfigurationManager.AppSettings["SecretKey"]);
             request.AddParameter("grant_type", "authorization_code");
             request.AddParameter("code", code);
-            request.AddParameter("redirect_uri", "https://faedf14b.ngrok.io/api/authorization?email=" + email);
+            request.AddParameter("redirect_uri", ConfigurationManager.AppSettings["OUR_BASE_URL"] + "/api/authorization?email=" + email);
 
             request.AddHeader("Accept", "application/json");
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");

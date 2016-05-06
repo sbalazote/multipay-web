@@ -31,10 +31,13 @@ namespace Multipay.Controllers
 
         [HttpPost]
         [Route("api/notifications")]
-        public void Notifications([FromBody] WebhooksDTO webhooksDto)
+        public HttpResponseMessage Notifications([FromBody] WebhooksDTO webhooksDto)
         {
             var type = HttpContext.Current.Request.QueryString["type"];
             var dataId = HttpContext.Current.Request.QueryString["data.id"];
+
+            var response = Request.CreateResponse(HttpStatusCode.Created);
+            
 
             if (type.Equals("payment"))
             {
@@ -59,6 +62,7 @@ namespace Multipay.Controllers
 
                 }
             }
+            return response;
         }
     }
 }

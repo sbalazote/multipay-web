@@ -96,6 +96,10 @@
     <Compile Include="Entities\Phone.cs" />
     <Compile Include="Entities\Token.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="Migrations\201605061828178_multipay-initial.cs" />
+    <Compile Include="Migrations\201605061828178_multipay-initial.Designer.cs">
+      <DependentUpon>201605061828178_multipay-initial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -107,6 +111,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Security\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201605061828178_multipay-initial.resx">
+      <DependentUpon>201605061828178_multipay-initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
