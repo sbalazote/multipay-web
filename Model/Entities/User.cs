@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.AccessControl;
 
 namespace Model.Entities
 {
@@ -26,6 +25,7 @@ namespace Model.Entities
 
     public class Seller : User
     {
+        public int MPSellerUserId { get; set; }
         public string AuthCode { get; set; }
         public virtual Token Token { get; set; }
     }
