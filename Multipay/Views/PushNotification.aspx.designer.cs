@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Multipay {
+namespace Multipay.Views {
     
     
     public partial class PushNotification {

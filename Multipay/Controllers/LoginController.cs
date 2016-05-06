@@ -1,12 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using Model.Entities;
 using Multipay.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Multipay.DTOs;
 using Services;
@@ -95,7 +90,7 @@ namespace Multipay.Controllers
             // si da OK la peticion a Google
             if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == HttpStatusCode.OK)
             {
-                GoogleTokenInfoDTO googleTokenInfoDto = response.Data;
+                var googleTokenInfoDto = response.Data;
                 // Si el parametro Aud es igual al OauthClientId para el que fue generado en Android esta Ok.
                 if (googleTokenInfoDto.Aud == GoogleTokenInfoDTO.GoogleOauthServerClientId)
                 {
@@ -161,7 +156,7 @@ namespace Multipay.Controllers
             // si da OK la peticion a Google
             if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == HttpStatusCode.OK)
             {
-                FacebookTokenInfoDTO facebookTokenInfoDto = response.Data;
+                var facebookTokenInfoDto = response.Data;
                 // TODO intentar autenticar usuario con sus parametros.
                 var id = facebookTokenInfoDto.Id;
                 var email = facebookTokenInfoDto.Email;

@@ -204,6 +204,7 @@
     <Compile Include="DTOs\LoginRequestDTO.cs" />
     <Compile Include="DTOs\LoginResponseDTO.cs" />
     <Compile Include="DTOs\PaymentDataDTO.cs" />
+    <Compile Include="DTOs\WebhooksDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
