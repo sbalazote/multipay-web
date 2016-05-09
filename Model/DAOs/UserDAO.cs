@@ -25,7 +25,7 @@ namespace Model.DAOs
 
         public User Get(int id)
         {
-            context.Users.Find(id);
+           return context.Users.Find(id);
         }
 
         public User GetByEmail(string email)

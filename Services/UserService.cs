@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Model.DAOs;
 using Model.Entities;
 
@@ -45,7 +46,7 @@ namespace Services
 
         public List<User> GetAll()
         {
-            return userDAO.GetAll();
+            return userDAO.GetAll().ToList();
         }
     }
 }
