@@ -9,9 +9,14 @@ namespace Services
     {
         private UserDAO userDAO = new UserDAO();
 
-        public void Save(User user)
+        public void Update(User user)
         {
             userDAO.Save(user);
+        }
+
+        public void Save(User user)
+        {
+            userDAO.Insert(user);
         }
 
         public User Get(int id)
