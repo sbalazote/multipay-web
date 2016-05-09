@@ -17,6 +17,7 @@ namespace Model.DAOs
         public void Insert(User user)
         {
             context.Users.Add(user);
+            context.SaveChanges();
         }
 
         public User Get(int id)
