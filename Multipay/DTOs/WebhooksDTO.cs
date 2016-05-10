@@ -1,4 +1,6 @@
-﻿/*
+﻿using Newtonsoft.Json;
+
+/*
  * {
  * "id":123,
  * "live_mode":false,
@@ -9,7 +11,6 @@
  * "action":"test.created",
  * "data":{"id":"56456123212"}}
  */
-using Newtonsoft.Json;
 
 namespace Multipay.DTOs
 {

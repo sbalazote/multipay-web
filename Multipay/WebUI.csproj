@@ -197,6 +197,7 @@
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DTOs\AuthorizationTokenDTO.cs" />
     <Compile Include="DTOs\FacebookTokenInfoDTO.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="DTOs\LoginRequestDTO.cs" />
     <Compile Include="DTOs\LoginResponseDTO.cs" />
     <Compile Include="DTOs\PaymentDataDTO.cs" />
+    <Compile Include="DTOs\RegistrationRequestDTO.cs" />
     <Compile Include="DTOs\WebhooksDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

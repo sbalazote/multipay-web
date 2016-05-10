@@ -27,22 +27,32 @@ namespace Model.DAOs
 
         public User GetByEmail(string email)
         {
-            return context.Users.SingleOrDefault(x => (Equals(x.Email, email)));
+            return context.Users.SingleOrDefault(x => x.Email == email);
         }
 
         public User GetByEmail(string email, bool isSeller)
         {
-            return context.Users.SingleOrDefault(x => (Equals(x.Email, email)) && x is Seller);
+            var user = context.Users.SingleOrDefault(x => x.Email == email);
+            if (user is Seller && isSeller)
+                return user;
+            if (user is Buyer && !isSeller)
+                return user;
+            return null;
         }
 
         public bool Exists(string email)
         {
-            return context.Users.Any(o => Equals(o.Email, email));
+            return context.Users.Any(o => o.Email == email);
         }
 
         public bool Exists(string email, bool isSeller)
         {
-            return context.Users.Any(o => Equals(o.Email, email) && o is Seller);
+            var user = context.Users.SingleOrDefault(o => o.Email == email);
+            if (user is Seller && isSeller)
+                return true;
+            if (user is Buyer && !isSeller)
+                return true;
+            return false;
         }
 
         public IQueryable<User> GetAll()

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Security.Cryptography;
 using System.Text;
 using mercadopago;
+using Microsoft.Ajax.Utilities;
 using Model.Entities;
-using Multipay.DTO;
 using System.Net;
 using System.Web.Http;
 using Multipay.DTOs;
@@ -38,6 +40,10 @@ namespace Multipay.Controllers
                 {
                     if (user.Active)
                     {
+                        var device = user.Device;
+                        device.MobileId = loginRequest.MobileId;
+                        device.RegistrationId = loginRequest.RegistrationId;
+                        UserService.Update(user);
 
                         loginValid = true;
                         userId = user.Id;
@@ -101,7 +107,7 @@ namespace Multipay.Controllers
                     var firstName = googleTokenInfoDto.GivenName;
                     var lastName = googleTokenInfoDto.FamilyName;
 
-                    var existsUser = UserService.Exists(loginRequest.Email, loginRequest.IsSeller);
+                    var existsUser = UserService.Exists(email, loginRequest.IsSeller);
                     if (!existsUser)
                     {
                         if (loginRequest.IsSeller)
@@ -112,7 +118,11 @@ namespace Multipay.Controllers
                                 Name = firstName,
                                 Date = DateTime.Now,
                                 Active = true,
-                                Device = new Device(),
+                                Device = new Device
+                                {
+                                    MobileId = loginRequest.MobileId,
+                                    RegistrationId = loginRequest.RegistrationId
+                                },
                                 SocialNetworkId = id
                             };
                             UserService.Save(seller);
@@ -121,9 +131,22 @@ namespace Multipay.Controllers
                         {
                             var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
                             mp.sandboxMode(true);
-                            var customer = mp.post("/v1/customers", "{\"email\": \"" + email + "\"}");
-                            // TODO devuelve un Dictionary hay q parsear ese id que es el de Customer
-                            var customerId = customer["response"];
+                            
+                            // Me fijo si ya existia ese Customer para ese email.
+                            var filters = new Dictionary<String, String> {{"email", email}};
+                            var customerSearch = mp.get("/v1/customers/search", filters);
+                            var customerSearchResponse = (Hashtable)customerSearch["response"];
+                            var results = (ArrayList)customerSearchResponse["results"];
+                            var resultsHashtable = (Hashtable)results[0];
+                            var customerId = (string)resultsHashtable["id"];
+                            if (customerId.IsNullOrWhiteSpace())
+                            {
+                                var customerSaved = mp.post("/v1/customers", "{\"email\": \"" + email + "\"}");
+                                customerSearchResponse = (Hashtable)customerSaved["response"];
+                                results = (ArrayList)customerSearchResponse["results"];
+                                resultsHashtable = (Hashtable)results[0];
+                                customerId = (string)resultsHashtable["id"];                                
+                            }
                             var buyer = new Buyer
                             {
                                 Email = email,
@@ -131,7 +154,11 @@ namespace Multipay.Controllers
                                 LastName = lastName,
                                 Date = DateTime.Now,
                                 Active = true,
-                                Device = new Device(),
+                                Device = new Device
+                                {
+                                    MobileId = loginRequest.MobileId,
+                                    RegistrationId = loginRequest.RegistrationId
+                                },
                                 SocialNetworkId = id,
                                 MPCustomerId = (string) customerId
                             };
@@ -143,9 +170,14 @@ namespace Multipay.Controllers
                     }
                     else
                     {
-                        var user = UserService.GetByEmail(loginRequest.Email);
+                        var user = UserService.GetByEmail(email, loginRequest.IsSeller);
                         if (user.Active)
                         {
+                            var device = user.Device;
+                            device.MobileId = loginRequest.MobileId;
+                            device.RegistrationId = loginRequest.RegistrationId;
+                            UserService.Update(user);
+
                             loginValid = true;
                             userId = user.Id;
                             userName = user.Name;
@@ -209,13 +241,12 @@ namespace Multipay.Controllers
             if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == HttpStatusCode.OK)
             {
                 var facebookTokenInfoDto = response.Data;
-                // TODO intentar autenticar usuario con sus parametros.
                 var id = facebookTokenInfoDto.Id;
                 var email = facebookTokenInfoDto.Email;
                 var firstName = facebookTokenInfoDto.FirstName;
                 var lastName = facebookTokenInfoDto.LastName;
 
-                var existsUser = UserService.Exists(loginRequest.Email, loginRequest.IsSeller);
+                var existsUser = UserService.Exists(email, loginRequest.IsSeller);
                 if (!existsUser)
                 {
                     if (loginRequest.IsSeller)
@@ -226,7 +257,11 @@ namespace Multipay.Controllers
                             Name = firstName,
                             Date = DateTime.Now,
                             Active = true,
-                            Device = new Device(),
+                            Device = new Device
+                            {
+                                MobileId = loginRequest.MobileId,
+                                RegistrationId = loginRequest.RegistrationId
+                            },
                             SocialNetworkId = id
                         };
                         UserService.Save(seller);
@@ -235,9 +270,22 @@ namespace Multipay.Controllers
                     {
                         var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
                         mp.sandboxMode(true);
-                        var customer = mp.post("/v1/customers", "{\"email\": \"" + email + "\"}");
-                        // TODO devuelve un Dictionary hay q parsear ese id que es el de Customer
-                        var customerId = customer["id"];
+
+                        // Me fijo si ya existia ese Customer para ese email.
+                        var filters = new Dictionary<String, String> { { "email", email } };
+                        var customerSearch = mp.get("/v1/customers/search", filters);
+                        var customerSearchResponse = (Hashtable)customerSearch["response"];
+                        var results = (ArrayList)customerSearchResponse["results"];
+                        var resultsHashtable = (Hashtable)results[0];
+                        var customerId = (string)resultsHashtable["id"];
+                        if (customerId.IsNullOrWhiteSpace())
+                        {
+                            var customerSaved = mp.post("/v1/customers", "{\"email\": \"" + email + "\"}");
+                            customerSearchResponse = (Hashtable)customerSaved["response"];
+                            results = (ArrayList)customerSearchResponse["results"];
+                            resultsHashtable = (Hashtable)results[0];
+                            customerId = (string)resultsHashtable["id"];
+                        }
                         var buyer = new Buyer
                         {
                             Email = email,
@@ -245,7 +293,11 @@ namespace Multipay.Controllers
                             LastName = lastName,
                             Date = DateTime.Now,
                             Active = true,
-                            Device = new Device(),
+                            Device = new Device
+                            {
+                                MobileId = loginRequest.MobileId,
+                                RegistrationId = loginRequest.RegistrationId
+                            },
                             SocialNetworkId = id,
                             MPCustomerId = (string)customerId
                         };
@@ -257,9 +309,14 @@ namespace Multipay.Controllers
                 }
                 else
                 {
-                    var user = UserService.GetByEmail(loginRequest.Email);
+                    var user = UserService.GetByEmail(email, loginRequest.IsSeller);
                     if (user.Active)
                     {
+                        var device = user.Device;
+                        device.MobileId = loginRequest.MobileId;
+                        device.RegistrationId = loginRequest.RegistrationId;
+                        UserService.Update(user);
+
                         loginValid = true;
                         userId = user.Id;
                         userName = user.Name;
