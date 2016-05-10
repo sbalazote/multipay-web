@@ -11,13 +11,7 @@ namespace Model.DAOs
 
         User Get(int id);
 
-        User GetByEmail(string email);
-
         User GetByEmail(string email, bool isSeller);
-
-        bool Exists(string email);
-
-        bool Exists(string email, bool isSeller);
 
         IQueryable<User> GetAll();
 

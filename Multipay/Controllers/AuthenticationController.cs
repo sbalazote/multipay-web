@@ -18,7 +18,7 @@ namespace Multipay.Controllers
         public string GetAuthenticationToken(string email)
         {
             //TODO checkear en la db si el tiempo expiro para el token, si es asi pedir uno nuevo. select x el email del seller.
-            var user = UserService.GetByEmail(email);
+            var user = UserService.GetByEmail(email, true);
             var actualDT = new DateTime();
             var tokenRequestedDT =((Seller)user).Token.RequestedTime;
             

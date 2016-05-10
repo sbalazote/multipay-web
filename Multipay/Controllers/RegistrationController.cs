@@ -27,10 +27,9 @@ namespace Multipay.Controllers
             var userEmail = "";
             var password = registrationRequest.Password;
 
-            var exists = UserService.Exists(registrationRequest.Email, registrationRequest.IsSeller);
-            if (!exists)
+            var user = UserService.GetByEmail(registrationRequest.Email, registrationRequest.IsSeller);
+            if (user == null)
             {
-
                 if (registrationRequest.IsSeller)
                 {
                     var seller = new Seller
@@ -58,20 +57,18 @@ namespace Multipay.Controllers
                     var customerSearch = mp.get("/v1/customers/search", filters);
                     var customerSearchResponse = (Hashtable)customerSearch["response"];
                     var results = (ArrayList)customerSearchResponse["results"];
-                    Hashtable resultsHashtable;
                     string customerId;
                     // No existe el Customer para ese mail.
                     if (results.Count == 0)
                     {
                         var customerSaved = mp.post("/v1/customers", "{\"email\": \"" + registrationRequest.Email + "\"}");
                         customerSearchResponse = (Hashtable) customerSaved["response"];
-                        resultsHashtable = (Hashtable) customerSearchResponse["results"];
-                        customerId = (string) resultsHashtable["id"];
+                        customerId = (string)customerSearchResponse["id"];
                     }
                     // Existe el Customer para ese mail.
                     else
                     {
-                        resultsHashtable = (Hashtable)results[0];
+                        Hashtable resultsHashtable = (Hashtable)results[0];
                         customerId = (string)resultsHashtable["id"];
                         if (customerId.IsNullOrWhiteSpace())
                         {

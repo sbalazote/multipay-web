@@ -25,34 +25,9 @@ namespace Model.DAOs
            return context.Users.Find(id);
         }
 
-        public User GetByEmail(string email)
-        {
-            return context.Users.SingleOrDefault(x => x.Email == email);
-        }
-
         public User GetByEmail(string email, bool isSeller)
         {
-            var user = context.Users.SingleOrDefault(x => x.Email == email);
-            if (user is Seller && isSeller)
-                return user;
-            if (user is Buyer && !isSeller)
-                return user;
-            return null;
-        }
-
-        public bool Exists(string email)
-        {
-            return context.Users.Any(o => o.Email == email);
-        }
-
-        public bool Exists(string email, bool isSeller)
-        {
-            var user = context.Users.SingleOrDefault(o => o.Email == email);
-            if (user is Seller && isSeller)
-                return true;
-            if (user is Buyer && !isSeller)
-                return true;
-            return false;
+            return context.Users.SingleOrDefault(o => o.Email == email && (isSeller ? o is Seller : o is Buyer));
         }
 
         public IQueryable<User> GetAll()

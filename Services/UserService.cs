@@ -24,24 +24,9 @@ namespace Services
             return userDAO.Get(id);
         }
 
-        public User GetByEmail(string email)
-        {
-            return userDAO.GetByEmail(email);
-        }
-
         public User GetByEmail(string email, bool isSeller)
         {
             return userDAO.GetByEmail(email, isSeller);
-        }
-
-        public bool Exists(string email)
-        {
-            return userDAO.Exists(email);
-        }
-
-        public bool Exists(string email, bool isSeller)
-        {
-            return userDAO.Exists(email, isSeller);
         }
 
         public void Delete(int userId)

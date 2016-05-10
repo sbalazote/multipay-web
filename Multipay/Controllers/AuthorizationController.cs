@@ -25,7 +25,7 @@ namespace Multipay.Controllers
             Log.Debug("AuthorizationController.cs" + "   code: " + code + "email: " + email);
 
             // obtengo el usuario por el mail
-            var user = (Seller)UserService.GetByEmail(email);
+            var user = (Seller)UserService.GetByEmail(email, true);
 
             var client = new RestClient(ConfigurationManager.AppSettings["MP_API_BASE_URL"]);
 
@@ -56,7 +56,7 @@ namespace Multipay.Controllers
                 };
                 user.Token = token;
                 user.MPSellerUserId = authorizationTokenDto.UserId;
-                UserService.Save(user);
+                UserService.Update(user);
                 return true;
             }
             return false;

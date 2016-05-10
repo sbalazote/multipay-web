@@ -107,8 +107,8 @@ namespace Multipay.Controllers
                     var firstName = googleTokenInfoDto.GivenName;
                     var lastName = googleTokenInfoDto.FamilyName;
 
-                    var existsUser = UserService.Exists(email, loginRequest.IsSeller);
-                    if (!existsUser)
+                    var user = UserService.GetByEmail(email, loginRequest.IsSeller);
+                    if (user == null)
                     {
                         if (loginRequest.IsSeller)
                         {
@@ -170,7 +170,6 @@ namespace Multipay.Controllers
                     }
                     else
                     {
-                        var user = UserService.GetByEmail(email, loginRequest.IsSeller);
                         if (user.Active)
                         {
                             var device = user.Device;
@@ -246,8 +245,8 @@ namespace Multipay.Controllers
                 var firstName = facebookTokenInfoDto.FirstName;
                 var lastName = facebookTokenInfoDto.LastName;
 
-                var existsUser = UserService.Exists(email, loginRequest.IsSeller);
-                if (!existsUser)
+                var user = UserService.GetByEmail(email, loginRequest.IsSeller);
+                if (user == null)
                 {
                     if (loginRequest.IsSeller)
                     {
@@ -309,7 +308,6 @@ namespace Multipay.Controllers
                 }
                 else
                 {
-                    var user = UserService.GetByEmail(email, loginRequest.IsSeller);
                     if (user.Active)
                     {
                         var device = user.Device;
