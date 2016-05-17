@@ -49,8 +49,7 @@ namespace Multipay.Controllers
                 }
                 else
                 {
-                    var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
-                    mp.sandboxMode(true);
+                    /*var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
 
                     // Me fijo si ya existia ese Customer para ese email.
                     var filters = new Dictionary<String, String> { { "email", registrationRequest.Email } };
@@ -78,7 +77,7 @@ namespace Multipay.Controllers
                             resultsHashtable = (Hashtable)results[0];
                             customerId = (string)resultsHashtable["id"];
                         }
-                    }
+                    }*/
                     
                     var identification = new Identification
                     {
@@ -108,7 +107,7 @@ namespace Multipay.Controllers
                             MobileId = registrationRequest.MobileId,
                             RegistrationId = registrationRequest.RegistrationId
                         },
-                        MPCustomerId = (string)customerId,
+                        //MPCustomerId = (string)customerId,
                         LastName = registrationRequest.LastName,
                         Identification = identification,
                         Address = address,

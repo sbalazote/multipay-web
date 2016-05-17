@@ -1,52 +1,34 @@
 ﻿using System.Configuration;
 using System.Web.Http;
 using mercadopago;
+using Model.Entities;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Services;
 
 namespace Multipay.Controllers
 {
     public class CustomerController : ApiController
     {
-        [HttpGet]
-        [Route("api/getCustomerCards")]
-        public string GetCustomerCards(string customerId)
-        {
-            var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
-            mp.sandboxMode(true);
-
-            var cards = mp.get ("/v1/customers/"+customerId+"/cards", true);
-
-            var response = JsonConvert.SerializeObject(cards["response"]);
-
-            return response;
-        }
+        private readonly UserService _userService = new UserService();
 
         [HttpGet]
         [Route("api/getCustomer")]
-        public string GetCustomer(string customerId)
+        public JObject GetCustomer([FromUri(Name = "seller_email")] string sellerEmail, [FromUri(Name = "buyer_email")] string buyerEmail)
         {
-            var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
-            mp.sandboxMode(true);
+            var buyer = (Buyer)_userService.GetByEmail(buyerEmail, false);
+            var seller = (Seller)_userService.GetByEmail(sellerEmail, true);
 
-            var customer = mp.get("/v1/customers/"+customerId, true);
+            var mp = new MP(seller.Token.AccessToken);
 
-            var response = JsonConvert.SerializeObject(customer["response"]);
+            var customer = mp.get("/v1/customers/"+buyer.MPCustomerId, true);
 
-            return response;
-        }
-
-        [HttpPost]
-        [Route("api/customers/{customerId}/cards")]
-        public string AddNewCardToCustomer(string customerId, [FromBody] string cardToken)
-        {
-            var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
-            mp.sandboxMode(true);
-
-            var card = mp.post("/v1/customers/" + customerId + "/cards", "{\"token\": \""+cardToken+"\"}");
-
-            var response = JsonConvert.SerializeObject(card["response"]);
-
-            return response;
+            if (customer["response"] != null)
+            {
+                var response = JsonConvert.SerializeObject(customer["response"]);
+                return JObject.Parse(response);
+            }
+            return new JObject();
         }
     }
 }

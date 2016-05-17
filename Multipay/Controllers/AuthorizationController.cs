@@ -21,17 +21,13 @@ namespace Multipay.Controllers
         [Route("api/authorization")]
         public bool GetAuthorizationCode(string code, string email)
         {
-
-            Log.Debug("AuthorizationController.cs" + "   code: " + code + "email: " + email);
-
             // obtengo el usuario por el mail
             var user = (Seller)UserService.GetByEmail(email, true);
 
             var client = new RestClient(ConfigurationManager.AppSettings["MP_API_BASE_URL"]);
 
             var request = new RestRequest("/oauth/token", Method.POST);
-            request.AddParameter("client_id", ConfigurationManager.AppSettings["AppId"]);
-            request.AddParameter("client_secret", ConfigurationManager.AppSettings["SecretKey"]);
+            request.AddParameter("client_secret", ConfigurationManager.AppSettings["MPAccessToken"]);
             request.AddParameter("grant_type", "authorization_code");
             request.AddParameter("code", code);
             request.AddParameter("redirect_uri", ConfigurationManager.AppSettings["OUR_BASE_URL"] + "/api/authorization?email=" + email);
@@ -50,6 +46,7 @@ namespace Multipay.Controllers
                     AccessToken = authorizationTokenDto.AccessToken,
                     Expiration = authorizationTokenDto.ExpiresIn,
                     RefreshToken = authorizationTokenDto.RefreshToken,
+                    PublicKey = authorizationTokenDto.PublicKey,
                     RequestedTime = DateTime.Now,
                     Scope = authorizationTokenDto.Scope,
                     Type = authorizationTokenDto.TokenType

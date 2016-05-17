@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Security.Cryptography;
 using System.Text;
-using mercadopago;
-using Microsoft.Ajax.Utilities;
 using Model.Entities;
 using System.Net;
 using System.Web.Http;
@@ -129,8 +125,7 @@ namespace Multipay.Controllers
                         }
                         else
                         {
-                            var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
-                            mp.sandboxMode(true);
+                            /*var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
                             
                             // Me fijo si ya existia ese Customer para ese email.
                             var filters = new Dictionary<String, String> {{"email", email}};
@@ -146,7 +141,7 @@ namespace Multipay.Controllers
                                 results = (ArrayList)customerSearchResponse["results"];
                                 resultsHashtable = (Hashtable)results[0];
                                 customerId = (string)resultsHashtable["id"];                                
-                            }
+                            }*/
                             var buyer = new Buyer
                             {
                                 Email = email,
@@ -160,7 +155,7 @@ namespace Multipay.Controllers
                                     RegistrationId = loginRequest.RegistrationId
                                 },
                                 SocialNetworkId = id,
-                                MPCustomerId = (string) customerId
+                                //MPCustomerId = (string) customerId
                             };
                             UserService.Save(buyer);
                         }
@@ -267,8 +262,7 @@ namespace Multipay.Controllers
                     }
                     else
                     {
-                        var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
-                        mp.sandboxMode(true);
+                        /*var mp = new MP(ConfigurationManager.AppSettings["MPAccessToken"]);
 
                         // Me fijo si ya existia ese Customer para ese email.
                         var filters = new Dictionary<String, String> { { "email", email } };
@@ -284,7 +278,7 @@ namespace Multipay.Controllers
                             results = (ArrayList)customerSearchResponse["results"];
                             resultsHashtable = (Hashtable)results[0];
                             customerId = (string)resultsHashtable["id"];
-                        }
+                        }*/
                         var buyer = new Buyer
                         {
                             Email = email,
@@ -298,7 +292,7 @@ namespace Multipay.Controllers
                                 RegistrationId = loginRequest.RegistrationId
                             },
                             SocialNetworkId = id,
-                            MPCustomerId = (string)customerId
+                            //MPCustomerId = (string)customerId
                         };
                         UserService.Save(buyer);
                     }
