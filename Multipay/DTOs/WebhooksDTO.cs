@@ -25,7 +25,7 @@ namespace Multipay.DTOs
         [JsonProperty("date_created")]
         public string DateCreated { get; set; }
         [JsonProperty("user_id")]
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         [JsonProperty("api_version")]
         public string ApiVersion { get; set; }
         [JsonProperty("action")]

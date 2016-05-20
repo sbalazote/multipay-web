@@ -43,7 +43,7 @@ namespace Multipay.Controllers
                         {
                             MobileId = registrationRequest.MobileId,
                             RegistrationId = registrationRequest.RegistrationId
-                        },
+                        }
                     };
                     UserService.Save(seller);
                 }

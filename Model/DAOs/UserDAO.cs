@@ -39,5 +39,10 @@ namespace Model.DAOs
         {
             throw new NotImplementedException();
         }
+
+        public Seller GetByMPSellerUserId(int mpSellerUserId)
+        {
+            return context.Users.OfType<Seller>().SingleOrDefault(o => o.MPSellerUserId == mpSellerUserId);
+        }
     }
 }
