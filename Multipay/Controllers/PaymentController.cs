@@ -67,7 +67,6 @@ namespace Multipay.Controllers
             var cardToken = paymentData.CardToken;
             var paymentMethodId = paymentData.PaymentMethodId;
             var applicationFee = 0.03f * transactionAmount;
-            const string statementDescriptor = "MULTIPAY";
 
             var data = "{" +
                 "\"transaction_amount\": " + transactionAmount + "," +
@@ -76,8 +75,8 @@ namespace Multipay.Controllers
                 "\"installments\": 1," +
                 "\"payment_method_id\": \"" + paymentMethodId + "\"," +
                 "\"application_fee\": " + applicationFee + "," +
-                //"\"statement_descriptor\": " + statementDescriptor + "," +
-                //"\"binary_mode\": " + true + "," +
+                "\"statement_descriptor\": \"MULTIPAY\"," +
+                "\"binary_mode\": true," +
                 "\"payer\": {" +
                     "\"id\": \"" + customerId + "\"" +
                     "}" +

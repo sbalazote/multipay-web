@@ -206,6 +206,7 @@
     <Compile Include="DTOs\LoginRequestDTO.cs" />
     <Compile Include="DTOs\LoginResponseDTO.cs" />
     <Compile Include="DTOs\PaymentDataDTO.cs" />
+    <Compile Include="DTOs\PaymentLinkDTO.cs" />
     <Compile Include="DTOs\RegistrationRequestDTO.cs" />
     <Compile Include="DTOs\WebhooksDTO.cs" />
     <Compile Include="Global.asax.cs">

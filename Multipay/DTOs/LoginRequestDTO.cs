@@ -14,5 +14,7 @@ namespace Multipay.DTOs
         public string SocialToken { get; set; }
         [Required]
         public bool IsSeller { get; set; }
+        public int PhoneAreaCode { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }

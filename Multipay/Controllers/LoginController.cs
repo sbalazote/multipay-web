@@ -39,6 +39,12 @@ namespace Multipay.Controllers
                         var device = user.Device;
                         device.MobileId = loginRequest.MobileId;
                         device.RegistrationId = loginRequest.RegistrationId;
+                        if (!loginRequest.IsSeller)
+                        {
+                            var buyer = (Buyer)user;
+                            buyer.Phone.AreaCode = loginRequest.PhoneAreaCode;
+                            buyer.Phone.Number = loginRequest.PhoneNumber;
+                        }
                         UserService.Update(user);
 
                         loginValid = true;
@@ -156,6 +162,11 @@ namespace Multipay.Controllers
                                 },
                                 SocialNetworkId = id,
                                 //MPCustomerId = (string) customerId
+                                Phone = new Phone
+                                {
+                                    AreaCode = loginRequest.PhoneAreaCode,
+                                    Number = loginRequest.PhoneNumber
+                                }
                             };
                             UserService.Save(buyer);
                         }
@@ -170,7 +181,14 @@ namespace Multipay.Controllers
                             var device = user.Device;
                             device.MobileId = loginRequest.MobileId;
                             device.RegistrationId = loginRequest.RegistrationId;
-                            UserService.Update(user);
+                            Buyer buyer = null;
+                            if (!loginRequest.IsSeller)
+                            {
+                                buyer = (Buyer) user;
+                                buyer.Phone.AreaCode = loginRequest.PhoneAreaCode;
+                                buyer.Phone.Number = loginRequest.PhoneNumber;
+                            }
+                            UserService.Update(buyer);
 
                             loginValid = true;
                             userId = user.Id;
@@ -215,7 +233,7 @@ namespace Multipay.Controllers
             var userName = "";
             var userEmail = "";
 
-            var client = new RestClient(ConfigurationManager.AppSettings["FACEBOKK_API_BASE_URL"]);
+            var client = new RestClient(ConfigurationManager.AppSettings["FACEBOOK_API_BASE_URL"]);
 
             var keyByte = Encoding.GetBytes(ConfigurationManager.AppSettings["FACEBOOK_APP_SECRET_PROOF"]);
             var hmacsha256 = new HMACSHA256(keyByte);
@@ -307,7 +325,14 @@ namespace Multipay.Controllers
                         var device = user.Device;
                         device.MobileId = loginRequest.MobileId;
                         device.RegistrationId = loginRequest.RegistrationId;
-                        UserService.Update(user);
+                        Buyer buyer = null;
+                        if (!loginRequest.IsSeller)
+                        {
+                            buyer = (Buyer)user;
+                            buyer.Phone.AreaCode = loginRequest.PhoneAreaCode;
+                            buyer.Phone.Number = loginRequest.PhoneNumber;
+                        }
+                        UserService.Update(buyer);
 
                         loginValid = true;
                         userId = user.Id;

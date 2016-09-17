@@ -24,6 +24,7 @@ namespace Multipay.Controllers
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly SellerService _sellerService = new SellerService();
+        private readonly BuyerService _buyerService = new BuyerService();
 
         public void GetAuthenticationToken(string topic, int id) 
         {
@@ -37,6 +38,50 @@ namespace Multipay.Controllers
             {
             throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.InternalServerError));        
             }
+        }
+
+        [HttpPost]
+        [Route("api/paymentLink")]
+        public HttpResponseMessage PaymentLink([FromBody] PaymentLinkDTO paymentLinkDTO)
+        {
+            var response = Request.CreateResponse(HttpStatusCode.Created);
+
+            var FCMNotificationMessageTitle = "¿Aceptar el Pago?";
+            var FCMNotificationMessageText = paymentLinkDTO.Description + paymentLinkDTO.SellerEmail + paymentLinkDTO.TransactionAmount;
+
+            var buyer = _buyerService.GetByPhone(paymentLinkDTO.AreaCode, paymentLinkDTO.Number);
+            var registrationToken = buyer.Device.RegistrationId;
+
+            var client = new RestClient(ConfigurationManager.AppSettings["FCM_API_BASE_URL"]);
+
+            var fcmRequest = new RestRequest("/fcm/send", Method.POST);
+            fcmRequest.RequestFormat = DataFormat.Json;
+            fcmRequest.JsonSerializer = new RestSharpJsonNetSerializer();
+            fcmRequest.AddHeader("Content-Type", "application/json");
+            fcmRequest.AddHeader("Authorization", "key=" + ConfigurationManager.AppSettings["FCM_SERVER_KEY"]);
+
+            var fcmNotificationMessageDto = new FCMNotificationMessageDTO
+            {
+                Notification = new FCMNotificationMessageDTO.FCMNotificationMessageDetailDTO
+                {
+                    Title = FCMNotificationMessageTitle,
+                    Text = FCMNotificationMessageText,
+                    ClickAction = "OPEN_ACTIVITY_1",
+                    Icon = "ic_logo_multipay"
+                },
+                To = registrationToken
+            };
+
+            string json = JsonConvert.SerializeObject(fcmNotificationMessageDto, Formatting.Indented, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+
+            fcmRequest.AddJsonBody(fcmNotificationMessageDto);
+
+            IRestResponse fcmResponse = client.Execute(fcmRequest);
+
+            return response;
         }
 
         [HttpPost]

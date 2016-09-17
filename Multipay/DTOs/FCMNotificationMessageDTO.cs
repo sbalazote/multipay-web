@@ -15,6 +15,10 @@ namespace Multipay.DTOs
             public string Title { get; set; }
             [JsonProperty("text")]
             public string Text { get; set; }
+            [JsonProperty("click_action")]
+            public string ClickAction { get; set; }
+            [JsonProperty("icon")]
+            public string Icon { get; set; }
         }
     }
 }

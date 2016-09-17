@@ -44,5 +44,10 @@ namespace Model.DAOs
         {
             return context.Users.OfType<Seller>().SingleOrDefault(o => o.MPSellerUserId == mpSellerUserId);
         }
+
+        public Buyer GetByPhone(int areaCode, string number)
+        {
+            return context.Users.OfType<Buyer>().SingleOrDefault(o => o.Phone.AreaCode == areaCode && o.Phone.Number == number);
+        }
     }
 }
