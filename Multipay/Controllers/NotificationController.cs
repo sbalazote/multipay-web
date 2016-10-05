@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Configuration;
+using System.Globalization;
 using System.Web;
 using log4net;
 using System;
@@ -42,46 +43,75 @@ namespace Multipay.Controllers
 
         [HttpPost]
         [Route("api/paymentLink")]
-        public HttpResponseMessage PaymentLink([FromBody] PaymentLinkDTO paymentLinkDTO)
+        public LoginResponseDTO PaymentLink([FromBody] PaymentLinkDTO paymentLinkDTO)
         {
-            var response = Request.CreateResponse(HttpStatusCode.Created);
+            var loginValid = false;
+            var userId = -1;
+            var message = "";
+            var userName = "";
+            var userEmail = "";
 
-            var FCMNotificationMessageTitle = "¿Aceptar el Pago?";
-            var FCMNotificationMessageText = paymentLinkDTO.Description + paymentLinkDTO.SellerEmail + paymentLinkDTO.TransactionAmount;
+            const string fcmNotificationMessageTitle = "¿Aceptar el Pago?";
+            var fcmNotificationMessageText = "TOTAL $" + paymentLinkDTO.TransactionAmount;
 
             var buyer = _buyerService.GetByPhone(paymentLinkDTO.AreaCode, paymentLinkDTO.Number);
-            var registrationToken = buyer.Device.RegistrationId;
-
-            var client = new RestClient(ConfigurationManager.AppSettings["FCM_API_BASE_URL"]);
-
-            var fcmRequest = new RestRequest("/fcm/send", Method.POST);
-            fcmRequest.RequestFormat = DataFormat.Json;
-            fcmRequest.JsonSerializer = new RestSharpJsonNetSerializer();
-            fcmRequest.AddHeader("Content-Type", "application/json");
-            fcmRequest.AddHeader("Authorization", "key=" + ConfigurationManager.AppSettings["FCM_SERVER_KEY"]);
-
-            var fcmNotificationMessageDto = new FCMNotificationMessageDTO
+            if (buyer == null)
             {
-                Notification = new FCMNotificationMessageDTO.FCMNotificationMessageDetailDTO
+                message = "No existe comprador para ese numero";
+            }
+            else
+            {
+                loginValid = true;
+                userId = buyer.Id;
+                userName = buyer.Name;
+                userEmail = buyer.Email;
+
+                var registrationToken = buyer.Device.RegistrationId;
+
+                var client = new RestClient(ConfigurationManager.AppSettings["FCM_API_BASE_URL"]);
+
+                var fcmRequest = new RestRequest("/fcm/send", Method.POST)
                 {
-                    Title = FCMNotificationMessageTitle,
-                    Text = FCMNotificationMessageText,
-                    ClickAction = "OPEN_ACTIVITY_1",
-                    Icon = "ic_logo_multipay"
-                },
-                To = registrationToken
+                    RequestFormat = DataFormat.Json,
+                    JsonSerializer = new RestSharpJsonNetSerializer()
+                };
+                fcmRequest.AddHeader("Content-Type", "application/json");
+                fcmRequest.AddHeader("Authorization", "key=" + ConfigurationManager.AppSettings["FCM_SERVER_KEY"]);
+
+                var fcmNotificationMessageDto = new FCMNotificationMessageDTO
+                {
+                    Data = new FCMNotificationMessageDTO.FCMNotificationMessageDetailDTO
+                    {
+                        Title = fcmNotificationMessageTitle,
+                        Text = fcmNotificationMessageText,
+                        Description = paymentLinkDTO.Description,
+                        SellerEmail = paymentLinkDTO.SellerEmail,
+                        TransactionAmount = paymentLinkDTO.TransactionAmount.ToString(CultureInfo.InvariantCulture)
+                    },
+                    To = registrationToken
+                };
+
+                /*string json = JsonConvert.SerializeObject(fcmNotificationMessageDto, Formatting.Indented, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });*/
+
+                fcmRequest.AddJsonBody(fcmNotificationMessageDto);
+
+                IRestResponse fcmResponse = client.Execute(fcmRequest);
+            }
+            
+
+            var loginResponse = new LoginResponseDTO
+            {
+                Valid = loginValid,
+                Message = message,
+                UserId = userId,
+                UserName = userName,
+                UserEmail = userEmail
             };
 
-            string json = JsonConvert.SerializeObject(fcmNotificationMessageDto, Formatting.Indented, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
-
-            fcmRequest.AddJsonBody(fcmNotificationMessageDto);
-
-            IRestResponse fcmResponse = client.Execute(fcmRequest);
-
-            return response;
+            return loginResponse;
         }
 
         [HttpPost]
@@ -153,7 +183,7 @@ namespace Multipay.Controllers
 
             var fcmNotificationMessageDto = new FCMNotificationMessageDTO
             {
-                Notification = new FCMNotificationMessageDTO.FCMNotificationMessageDetailDTO {
+                Data = new FCMNotificationMessageDTO.FCMNotificationMessageDetailDTO {
                     Title = FCMNotificationMessageTitle,
                     Text = FCMNotificationMessageText
                 },

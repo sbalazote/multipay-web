@@ -4,8 +4,8 @@ namespace Multipay.DTOs
 {
     public class FCMNotificationMessageDTO
     {
-        [JsonProperty("notification")]
-        public FCMNotificationMessageDetailDTO Notification { get; set; }
+        [JsonProperty("data")]
+        public FCMNotificationMessageDetailDTO Data { get; set; }
         [JsonProperty("to")]
         public string To { get; set; }
 
@@ -15,10 +15,12 @@ namespace Multipay.DTOs
             public string Title { get; set; }
             [JsonProperty("text")]
             public string Text { get; set; }
-            [JsonProperty("click_action")]
-            public string ClickAction { get; set; }
-            [JsonProperty("icon")]
-            public string Icon { get; set; }
+            [JsonProperty("description")]
+            public string Description { get; set; }
+            [JsonProperty("seller_email")]
+            public string SellerEmail { get; set; }
+            [JsonProperty("transaction_amount")]
+            public string TransactionAmount { get; set; }
         }
     }
 }
