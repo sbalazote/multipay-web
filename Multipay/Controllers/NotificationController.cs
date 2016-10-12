@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.ComponentModel;
 using System.Configuration;
 using System.Globalization;
 using System.Web;
@@ -52,7 +53,7 @@ namespace Multipay.Controllers
             var userEmail = "";
 
             const string fcmNotificationMessageTitle = "¿Aceptar el Pago?";
-            var fcmNotificationMessageText = "TOTAL $" + paymentLinkDTO.TransactionAmount;
+            var fcmNotificationMessageText = "TOTAL $" + paymentLinkDTO.TransactionAmount + " " + paymentLinkDTO.Description;
 
             var buyer = _buyerService.GetByPhone(paymentLinkDTO.AreaCode, paymentLinkDTO.Number);
             if (buyer == null)
@@ -82,6 +83,7 @@ namespace Multipay.Controllers
                 {
                     Data = new FCMNotificationMessageDTO.FCMNotificationMessageDetailDTO
                     {
+                        Type = "paymentLink",
                         Title = fcmNotificationMessageTitle,
                         Text = fcmNotificationMessageText,
                         Description = paymentLinkDTO.Description,
@@ -90,11 +92,6 @@ namespace Multipay.Controllers
                     },
                     To = registrationToken
                 };
-
-                /*string json = JsonConvert.SerializeObject(fcmNotificationMessageDto, Formatting.Indented, new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                });*/
 
                 fcmRequest.AddJsonBody(fcmNotificationMessageDto);
 
@@ -123,8 +120,8 @@ namespace Multipay.Controllers
 
             var response = Request.CreateResponse(HttpStatusCode.Created);
 
-            var FCMNotificationMessageTitle = "";
-            var FCMNotificationMessageText = "";
+            var fcmNotificationMessageTitle = "";
+            var fcmNotificationMessageText = "";
 
             string registrationToken = null;
             if (type.Equals("payment"))
@@ -142,17 +139,18 @@ namespace Multipay.Controllers
                     var paymentDetails = ((Hashtable)paymentDetail["response"]);
                     var status = paymentDetails["status"];
                     var payerEmail = ((Hashtable)paymentDetails["payer"])["email"];
+                    var description = paymentDetails["description"];
                     var transactionAmount = paymentDetails["transaction_amount"];
                     var dateLastUpdated = paymentDetails["date_last_updated"];
                     if (status.Equals("approved"))
                     {
-                        FCMNotificationMessageTitle += "Pago APROBADO";
+                        fcmNotificationMessageTitle += "Pago APROBADO";
                     }
                     else if (status.Equals("rejected"))
                     {
-                        FCMNotificationMessageTitle += "Pago RECHAZADO";
+                        fcmNotificationMessageTitle += "Pago RECHAZADO";
                     }
-                    FCMNotificationMessageText += " de " + payerEmail + " por $ " + transactionAmount + " a las " + dateLastUpdated;
+                    fcmNotificationMessageText += "Comprador: " + payerEmail + " - (" + description + ")" + " por $ " + transactionAmount + " a las " + dateLastUpdated;
 
                 }
                 else if (webhooksDto.Action.Equals("payment.updated"))
@@ -184,8 +182,9 @@ namespace Multipay.Controllers
             var fcmNotificationMessageDto = new FCMNotificationMessageDTO
             {
                 Data = new FCMNotificationMessageDTO.FCMNotificationMessageDetailDTO {
-                    Title = FCMNotificationMessageTitle,
-                    Text = FCMNotificationMessageText
+                    Type = "notifications",
+                    Title = fcmNotificationMessageTitle,
+                    Text = fcmNotificationMessageText
                 },
                 To = registrationToken
             };

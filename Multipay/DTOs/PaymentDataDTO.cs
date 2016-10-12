@@ -6,6 +6,8 @@ namespace Multipay.DTOs
     {
         [JsonProperty("card_token")]
         public string CardToken { get; set; }
+        [JsonProperty("description")]
+        public string Description { get; set; }
         [JsonProperty("transaction_amount")]
         public float TransactionAmount { get; set; }
         [JsonProperty("payment_method_id")]

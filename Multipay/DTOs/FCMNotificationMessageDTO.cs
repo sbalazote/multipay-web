@@ -11,6 +11,8 @@ namespace Multipay.DTOs
 
         public class FCMNotificationMessageDetailDTO
         {
+            [JsonProperty("type")]
+            public string Type { get; set; }
             [JsonProperty("title")]
             public string Title { get; set; }
             [JsonProperty("text")]

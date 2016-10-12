@@ -34,7 +34,6 @@ namespace Multipay.Controllers
         [Route("api/doPayment")]
         public JObject DoPayment([FromBody] PaymentDataDTO paymentData)
         {
-            paymentData.BuyerEmail = "test_payer_12345789@testuser.com";
             //  Obtengo al Comprador y al Vendedor.
             var buyer = (Buyer)_userService.GetByEmail(paymentData.BuyerEmail, false);
             var seller = (Seller)_userService.GetByEmail(paymentData.SellerEmail, true);
@@ -71,7 +70,7 @@ namespace Multipay.Controllers
             var data = "{" +
                 "\"transaction_amount\": " + transactionAmount + "," +
                 "\"token\": \"" + cardToken + "\"," +
-                "\"description\": \"Test Item 01\"," +
+                "\"description\": \"" + paymentData.Description + "\"," +
                 "\"installments\": 1," +
                 "\"payment_method_id\": \"" + paymentMethodId + "\"," +
                 "\"application_fee\": " + applicationFee + "," +
